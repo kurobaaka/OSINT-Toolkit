@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OSINT Toolkit</title>
+  <title>OSINT Toolkit Pro</title>
   <style>
     * {
       margin: 0;
@@ -11,17 +11,63 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --bg-gradient-start: #667eea;
+      --bg-gradient-end: #764ba2;
+      --text-primary: #fff;
+      --text-secondary: rgba(255, 255, 255, 0.8);
+      --card-bg: rgba(255, 255, 255, 0.15);
+      --card-hover: rgba(255, 255, 255, 0.25);
+      --input-bg: rgba(255, 255, 255, 0.9);
+      --input-text: #333;
+      --header-bg: rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark-theme {
+      --bg-gradient-start: #1a1a2e;
+      --bg-gradient-end: #16213e;
+      --text-primary: #eee;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-hover: rgba(255, 255, 255, 0.1);
+      --input-bg: rgba(255, 255, 255, 0.1);
+      --input-text: #eee;
+      --header-bg: rgba(0, 0, 0, 0.3);
+    }
+
     body {
-      width: 400px;
+      width: 450px;
+      max-height: 600px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      color: var(--text-primary);
+      overflow-y: auto;
     }
 
     .header {
       padding: 20px;
       text-align: center;
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--header-bg);
+      position: relative;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--card-bg);
+      border: none;
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-hover);
+      transform: scale(1.1);
     }
 
     h1 {
@@ -32,7 +78,7 @@
 
     .subtitle {
       font-size: 12px;
-      opacity: 0.8;
+      color: var(--text-secondary);
     }
 
     .container {
@@ -48,19 +94,19 @@
       margin-bottom: 15px;
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="email"] {
       width: 100%;
       padding: 12px 15px;
       border: none;
       border-radius: 8px;
       font-size: 14px;
-      background: rgba(255, 255, 255, 0.9);
-      color: #333;
+      background: var(--input-bg);
+      color: var(--input-text);
+      transition: all 0.3s;
     }
 
-    input[type="text"]:focus {
+    input[type="text"]:focus, input[type="email"]:focus {
       outline: none;
-      background: #fff;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
@@ -68,7 +114,7 @@
       display: flex;
       gap: 8px;
       margin-bottom: 15px;
-      background: rgba(0, 0, 0, 0.2);
+      background: var(--header-bg);
       padding: 8px;
       border-radius: 10px;
     }
@@ -79,17 +125,18 @@
       text-align: center;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       transition: all 0.3s;
       background: transparent;
+      color: var(--text-primary);
     }
 
     .tab:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--card-bg);
     }
 
     .tab.active {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--card-hover);
       font-weight: 600;
     }
 
@@ -103,8 +150,8 @@
       padding: 12px;
       border: none;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
+      background: var(--card-bg);
+      color: var(--text-primary);
       font-size: 13px;
       cursor: pointer;
       transition: all 0.3s;
@@ -113,13 +160,18 @@
     }
 
     .tool-btn:hover {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--card-hover);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     .tool-btn:active {
       transform: translateY(0);
+    }
+
+    .tool-btn.loading {
+      opacity: 0.6;
+      pointer-events: none;
     }
 
     .tab-content {
@@ -138,38 +190,133 @@
       display: block;
       padding: 10px 15px;
       margin-bottom: 8px;
-      background: rgba(255, 255, 255, 0.15);
+      background: var(--card-bg);
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-primary);
       text-decoration: none;
       font-size: 13px;
       transition: all 0.3s;
     }
 
     .quick-link:hover {
-      background: rgba(255, 255, 255, 0.25);
+      background: var(--card-hover);
       transform: translateX(5px);
+    }
+
+    .api-section {
+      background: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .api-section h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .api-result {
+      background: var(--header-bg);
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-top: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .api-result pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .settings-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: var(--card-bg);
+      border: none;
+      color: var(--text-primary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+
+    .settings-btn:hover {
+      background: var(--card-hover);
+    }
+
+    .parser-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .parser-result {
+      background: var(--header-bg);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .parser-result h4 {
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .parser-result ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .parser-result li {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .footer {
       padding: 15px 20px;
       text-align: center;
       font-size: 11px;
-      opacity: 0.7;
-      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-secondary);
+      background: var(--header-bg);
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid var(--card-bg);
+      border-top: 2px solid var(--text-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>🔍 OSINT Toolkit</h1>
-    <p class="subtitle">Open Source Intelligence Tools</p>
+    <button class="theme-toggle" id="themeToggle">🌙</button>
+    <h1>🔍 OSINT Toolkit Pro</h1>
+    <p class="subtitle">Advanced Intelligence Tools</p>
   </div>
 
   <div class="container">
     <div class="tabs">
       <div class="tab active" data-tab="search">Поиск</div>
-      <div class="tab" data-tab="analyze">Анализ</div>
+      <div class="tab" data-tab="api">API</div>
+      <div class="tab" data-tab="parser">Парсер</div>
       <div class="tab" data-tab="tools">Инструменты</div>
     </div>
 
@@ -186,22 +333,78 @@
           <button class="tool-btn" data-search="linkedin">LinkedIn</button>
           <button class="tool-btn" data-search="instagram">Instagram</button>
           <button class="tool-btn" data-search="reddit">Reddit</button>
+          <button class="tool-btn" data-search="telegram">Telegram</button>
+          <button class="tool-btn" data-search="facebook">Facebook</button>
+          <button class="tool-btn" data-search="tiktok">TikTok</button>
+          <button class="tool-btn" data-search="youtube">YouTube</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="input-group">
+          <input type="text" id="domainInput" placeholder="Введите домен или IP">
+        </div>
+        <div class="tools-grid">
+          <button class="tool-btn" data-analyze="whois">WHOIS</button>
+          <button class="tool-btn" data-analyze="dns">DNS Lookup</button>
+          <button class="tool-btn" data-analyze="shodan">Shodan</button>
+          <button class="tool-btn" data-analyze="virustotal">VirusTotal</button>
+          <button class="tool-btn" data-analyze="wayback">Wayback</button>
+          <button class="tool-btn" data-analyze="crt">SSL Certs</button>
         </div>
       </div>
     </div>
 
-    <!-- Вкладка анализа -->
-    <div id="analyze" class="tab-content">
-      <div class="input-group">
-        <input type="text" id="domainInput" placeholder="Введите домен или IP">
+    <!-- Вкладка API -->
+    <div id="api" class="tab-content">
+      <div class="api-section">
+        <h3>📧 Email Intelligence</h3>
+        <div class="input-group">
+          <input type="email" id="apiEmailInput" placeholder="email@example.com">
+        </div>
+        <div class="tools-grid">
+          <button class="tool-btn" id="hunterBtn">Hunter.io</button>
+          <button class="tool-btn" id="emailrepBtn">EmailRep</button>
+          <button class="tool-btn" id="haveibeenpwnedBtn">Pwned?</button>
+          <button class="tool-btn" id="emailValidateBtn">Validate</button>
+        </div>
+        <div id="apiResult" class="api-result" style="display: none;"></div>
       </div>
-      <div class="tools-grid">
-        <button class="tool-btn" data-analyze="whois">WHOIS</button>
-        <button class="tool-btn" data-analyze="dns">DNS Lookup</button>
-        <button class="tool-btn" data-analyze="shodan">Shodan</button>
-        <button class="tool-btn" data-analyze="virustotal">VirusTotal</button>
-        <button class="tool-btn" data-analyze="wayback">Wayback</button>
-        <button class="tool-btn" data-analyze="crt">SSL Certs</button>
+
+      <div class="api-section">
+        <h3>🌐 Domain Intelligence</h3>
+        <div class="input-group">
+          <input type="text" id="apiDomainInput" placeholder="example.com">
+        </div>
+        <div class="tools-grid">
+          <button class="tool-btn" id="ipinfoBtn">IP Info</button>
+          <button class="tool-btn" id="securitytrailsBtn">SecurityTrails</button>
+        </div>
+      </div>
+
+      <button class="settings-btn" id="apiSettingsBtn">⚙️ Настройки API ключей</button>
+    </div>
+
+    <!-- Вкладка парсера -->
+    <div id="parser" class="tab-content">
+      <div class="api-section">
+        <h3>🤖 Автоматический парсинг текущей страницы</h3>
+        <p style="font-size: 12px; margin-bottom: 10px; opacity: 0.8;">
+          Извлекает email, телефоны, социальные сети и ссылки
+        </p>
+        <div class="parser-controls">
+          <button class="tool-btn" id="parseCurrentBtn">Парсить страницу</button>
+          <button class="tool-btn" id="parseExportBtn">Экспорт JSON</button>
+        </div>
+        <div id="parserResult" class="parser-result" style="display: none;"></div>
+      </div>
+
+      <div class="api-section">
+        <h3>🔗 Парсинг ссылок</h3>
+        <div class="input-group">
+          <input type="text" id="customUrlInput" placeholder="https://example.com">
+        </div>
+        <button class="tool-btn" style="width: 100%;" id="parseCustomBtn">Парсить URL</button>
       </div>
     </div>
 
@@ -211,15 +414,19 @@
         <a href="https://osintframework.com/" target="_blank" class="quick-link">📚 OSINT Framework</a>
         <a href="https://haveibeenpwned.com/" target="_blank" class="quick-link">🔐 Have I Been Pwned</a>
         <a href="https://tineye.com/" target="_blank" class="quick-link">🖼️ TinEye Reverse Image</a>
-        <a href="https://emailrep.io/" target="_blank" class="quick-link">📧 EmailRep</a>
         <a href="https://www.shodan.io/" target="_blank" class="quick-link">🌐 Shodan</a>
         <a href="https://hunter.io/" target="_blank" class="quick-link">🎯 Hunter.io</a>
+        <a href="https://intelx.io/" target="_blank" class="quick-link">🔍 Intelligence X</a>
+        <a href="https://phonebook.cz/" target="_blank" class="quick-link">📞 PhoneBook</a>
+        <a href="https://grep.app/" target="_blank" class="quick-link">💻 Grep.app</a>
+        <a href="https://www.social-searcher.com/" target="_blank" class="quick-link">📱 Social Searcher</a>
+        <a href="https://whatsmyname.app/" target="_blank" class="quick-link">👤 WhatsMyName</a>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    Chrome Extension для OSINT исследований
+    OSINT Toolkit Pro v2.0 | Advanced Intelligence
   </div>
 
   <script src="popup.js"></script>

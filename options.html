@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSINT Toolkit - Настройки</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 40px;
+      font-size: 16px;
+    }
+
+    .api-section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      border-left: 4px solid #667eea;
+    }
+
+    .api-section h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .api-section p {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .api-section a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .api-section a:hover {
+      text-decoration: underline;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+      background: white;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+      margin-left: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .buttons-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .status-message {
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .status-message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .info-box {
+      background: #e7f3ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 13px;
+      color: #004085;
+      border: 1px solid #b8daff;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .key-visibility {
+      display: flex;
+      align-items: center;
+    }
+
+    .key-visibility input {
+      flex: 1;
+    }
+
+    .toggle-visibility {
+      margin-left: 10px;
+      padding: 12px 15px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .toggle-visibility:hover {
+      background: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Настройки OSINT Toolkit</h1>
+    <p class="subtitle">Настройте API ключи для расширенных возможностей</p>
+
+    <div class="api-section">
+      <h2>🎯 Hunter.io API</h2>
+      <p>
+        Hunter.io позволяет находить и проверять email адреса. 
+        Получите бесплатный API ключ на <a href="https://hunter.io/api" target="_blank">hunter.io/api</a>
+      </p>
+      <div class="input-group">
+        <label>API Key:</label>
+        <div class="key-visibility">
+          <input type="password" id="hunterApiKey" placeholder="Введите ваш Hunter.io API ключ">
+          <button class="toggle-visibility" onclick="toggleVisibility('hunterApiKey')">👁️</button>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>Бесплатный план:</strong>
+        50 запросов в месяц
+      </div>
+    </div>
+
+    <div class="api-section">
+      <h2>🔍 Shodan API</h2>
+      <p>
+        Shodan - поисковая система для устройств, подключенных к интернету.
+        Зарегистрируйтесь на <a href="https://account.shodan.io/register" target="_blank">shodan.io</a>
+      </p>
+      <div class="input-group">
+        <label>API Key:</label>
+        <div class="key-visibility">
+          <input type="password" id="shodanApiKey" placeholder="Введите ваш Shodan API ключ">
+          <button class="toggle-visibility" onclick="toggleVisibility('shodanApiKey')">👁️</button>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>Бесплатный план:</strong>
+        1 результат на запрос, базовые фильтры
+      </div>
+    </div>
+
+    <div class="api-section">
+      <h2>🛡️ VirusTotal API</h2>
+      <p>
+        VirusTotal анализирует файлы и URL на наличие вирусов и вредоносного ПО.
+        Получите ключ на <a href="https://www.virustotal.com/gui/join-us" target="_blank">virustotal.com</a>
+      </p>
+      <div class="input-group">
+        <label>API Key:</label>
+        <div class="key-visibility">
+          <input type="password" id="virustotalApiKey" placeholder="Введите ваш VirusTotal API ключ">
+          <button class="toggle-visibility" onclick="toggleVisibility('virustotalApiKey')">👁️</button>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>Бесплатный план:</strong>
+        4 запроса в минуту
+      </div>
+    </div>
+
+    <div class="api-section">
+      <h2>🔐 SecurityTrails API</h2>
+      <p>
+        SecurityTrails предоставляет данные о DNS, WHOIS и SSL сертификатах.
+        Зарегистрируйтесь на <a href="https://securitytrails.com/app/signup" target="_blank">securitytrails.com</a>
+      </p>
+      <div class="input-group">
+        <label>API Key:</label>
+        <div class="key-visibility">
+          <input type="password" id="securitytrailsApiKey" placeholder="Введите ваш SecurityTrails API ключ">
+          <button class="toggle-visibility" onclick="toggleVisibility('securitytrailsApiKey')">👁️</button>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>Бесплатный план:</strong>
+        50 запросов в месяц
+      </div>
+    </div>
+
+    <div class="buttons-group">
+      <button class="btn btn-primary" id="saveBtn">💾 Сохранить настройки</button>
+      <button class="btn btn-secondary" id="clearBtn">🗑️ Очистить все ключи</button>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+  </div>
+
+  <script>
+    // Загрузка сохраненных ключей
+    document.addEventListener('DOMContentLoaded', () => {
+      chrome.storage.local.get([
+        'hunterApiKey',
+        'shodanApiKey',
+        'virustotalApiKey',
+        'securitytrailsApiKey'
+      ], (result) => {
+        if (result.hunterApiKey) document.getElementById('hunterApiKey').value = result.hunterApiKey;
+        if (result.shodanApiKey) document.getElementById('shodanApiKey').value = result.shodanApiKey;
+        if (result.virustotalApiKey) document.getElementById('virustotalApiKey').value = result.virustotalApiKey;
+        if (result.securitytrailsApiKey) document.getElementById('securitytrailsApiKey').value = result.securitytrailsApiKey;
+      });
+    });
+
+    // Сохранение ключей
+    document.getElementById('saveBtn').addEventListener('click', () => {
+      const keys = {
+        hunterApiKey: document.getElementById('hunterApiKey').value,
+        shodanApiKey: document.getElementById('shodanApiKey').value,
+        virustotalApiKey: document.getElementById('virustotalApiKey').value,
+        securitytrailsApiKey: document.getElementById('securitytrailsApiKey').value
+      };
+
+      chrome.storage.local.set(keys, () => {
+        showStatus('Настройки успешно сохранены! ✅', 'success');
+      });
+    });
+
+    // Очистка ключей
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      if (confirm('Вы уверены, что хотите удалить все API ключи?')) {
+        chrome.storage.local.remove([
+          'hunterApiKey',
+          'shodanApiKey',
+          'virustotalApiKey',
+          'securitytrailsApiKey'
+        ], () => {
+          document.getElementById('hunterApiKey').value = '';
+          document.getElementById('shodanApiKey').value = '';
+          document.getElementById('virustotalApiKey').value = '';
+          document.getElementById('securitytrailsApiKey').value = '';
+          showStatus('Все ключи удалены', 'success');
+        });
+      }
+    });
+
+    // Переключение видимости ключа
+    function toggleVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    // Показ статусного сообщения
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('statusMessage');
+      statusDiv.textContent = message;
+      statusDiv.className = `status-message ${type}`;
+      statusDiv.style.display = 'block';
+
+      setTimeout(() => {
+        statusDiv.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

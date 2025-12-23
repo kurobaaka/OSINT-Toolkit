@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSINT - Результаты парсинга</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    h1 {
+      font-size: 28px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .export-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #45a049;
+    }
+
+    .section {
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border-left: 4px solid #667eea;
+    }
+
+    .section h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .item-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 10px;
+    }
+
+    .item {
+      background: white;
+      padding: 12px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      word-break: break-all;
+      transition: all 0.3s;
+      border: 1px solid #e0e0e0;
+    }
+
+    .item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateX(5px);
+    }
+
+    .item a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    .item a:hover {
+      text-decoration: underline;
+    }
+
+    .empty {
+      color: #999;
+      font-style: italic;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .metadata {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .metadata strong {
+      color: #667eea;
+      display: inline-block;
+      min-width: 120px;
+    }
+
+    .social-platform {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .social-platform h3 {
+      font-size: 16px;
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .social-accounts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .social-account {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e0e0e0;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 Результаты OSINT парсинга</h1>
+      <div class="export-buttons">
+        <button class="btn btn-secondary" id="exportJson">📥 Экспорт JSON</button>
+        <button class="btn btn-primary" id="exportCsv">📊 Экспорт CSV</button>
+      </div>
+    </div>
+
+    <div id="loading" class="loading">
+      <div class="loading-spinner"></div>
+      <p>Загрузка результатов...</p>
+    </div>
+
+    <div id="results" style="display: none;">
+      <!-- Статистика -->
+      <div class="stats" id="stats"></div>
+
+      <!-- Метаданные -->
+      <div class="section">
+        <h2>📋 Информация о странице</h2>
+        <div class="metadata" id="metadata"></div>
+      </div>
+
+      <!-- Email адреса -->
+      <div class="section">
+        <h2>
+          📧 Email адреса
+          <span class="badge" id="emailCount">0</span>
+        </h2>
+        <div class="item-list" id="emails"></div>
+      </div>
+
+      <!-- Телефоны -->
+      <div class="section">
+        <h2>
+          📞 Номера телефонов
+          <span class="badge" id="phoneCount">0</span>
+        </h2>
+        <div class="item-list" id="phones"></div>
+      </div>
+
+      <!-- Социальные сети -->
+      <div class="section">
+        <h2>🌐 Социальные сети</h2>
+        <div id="socials"></div>
+      </div>
+
+      <!-- URL ссылки -->
+      <div class="section">
+        <h2>
+          🔗 Найденные URL
+          <span class="badge" id="urlCount">0</span>
+        </h2>
+        <div class="item-list" id="urls"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let resultsData = null;
+
+    // Загрузка результатов
+    chrome.storage.local.get(['lastParseResults', 'emailCheckResults'], (result) => {
+      const loading = document.getElementById('loading');
+      const resultsDiv = document.getElementById('results');
+
+      if (result.lastParseResults) {
+        resultsData = result.lastParseResults;
+        displayResults(resultsData);
+      } else if (result.emailCheckResults) {
+        resultsData = result.emailCheckResults;
+        displayEmailCheckResults(resultsData);
+      } else {
+        loading.innerHTML = '<p>Нет доступных результатов</p>';
+      }
+
+      loading.style.display = 'none';
+      resultsDiv.style.display = 'block';
+    });
+
+    function displayResults(data) {
+      // Статистика
+      const statsHtml = `
+        <div class="stat-card">
+          <div class="number">${data.emails?.length || 0}</div>
+          <div class="label">Email адресов</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">${data.phones?.length || 0}</div>
+          <div class="label">Телефонов</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">${Object.values(data.socials || {}).flat().length}</div>
+          <div class="label">Соц. сети</div>
+        </div>
+        <div class="stat-card">
+          <div class="number">${data.urls?.length || 0}</div>
+          <div class="label">URL ссылок</div>
+        </div>
+      `;
+      document.getElementById('stats').innerHTML = statsHtml;
+
+      // Метаданные
+      const metadataHtml = `
+        <div><strong>URL:</strong> <a href="${data.url}" target="_blank">${data.url}</a></div>
+        <div><strong>Заголовок:</strong> ${data.title}</div>
+        <div><strong>Описание:</strong> ${data.metadata?.description || 'Нет данных'}</div>
+        <div><strong>Дата парсинга:</strong> ${new Date(data.timestamp || Date.now()).toLocaleString('ru-RU')}</div>
+      `;
+      document.getElementById('metadata').innerHTML = metadataHtml;
+
+      // Email адреса
+      displayList('emails', data.emails, 'emailCount');
+
+      // Телефоны
+      displayList('phones', data.phones, 'phoneCount');
+
+      // Социальные сети
+      displaySocials(data.socials);
+
+      // URL
+      displayUrls(data.urls, 'urlCount');
+    }
+
+    function displayList(elementId, items, countId) {
+      const container = document.getElementById(elementId);
+      document.getElementById(countId).textContent = items?.length || 0;
+
+      if (!items || items.length === 0) {
+        container.innerHTML = '<div class="empty">Ничего не найдено</div>';
+        return;
+      }
+
+      container.innerHTML = items.map(item => `<div class="item">${item}</div>`).join('');
+    }
+
+    function displayUrls(urls, countId) {
+      const container = document.getElementById('urls');
+      document.getElementById(countId).textContent = urls?.length || 0;
+
+      if (!urls || urls.length === 0) {
+        container.innerHTML = '<div class="empty">Ничего не найдено</div>';
+        return;
+      }
+
+      container.innerHTML = urls.map(url => 
+        `<div class="item"><a href="${url}" target="_blank">${url}</a></div>`
+      ).join('');
+    }
+
+    function displaySocials(socials) {
+      const container = document.getElementById('socials');
+
+      if (!socials || Object.keys(socials).length === 0) {
+        container.innerHTML = '<div class="empty">Ничего не найдено</div>';
+        return;
+      }
+
+      let html = '';
+      for (const [platform, accounts] of Object.entries(socials)) {
+        html += `
+          <div class="social-platform">
+            <h3>${platform.charAt(0).toUpperCase() + platform.slice(1)}</h3>
+            <div class="social-accounts">
+              ${accounts.map(acc => `<span class="social-account">${acc}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function displayEmailCheckResults(data) {
+      // Специальное отображение для проверки email
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = `
+        <div class="section">
+          <h2>📧 Проверка Email: ${data.email}</h2>
+          <div class="metadata">
+            <div><strong>Дата проверки:</strong> ${new Date(data.timestamp).toLocaleString('ru-RU')}</div>
+            ${JSON.stringify(data.checks, null, 2)}
+          </div>
+        </div>
+      `;
+    }
+
+    // Экспорт в JSON
+    document.getElementById('exportJson').addEventListener('click', () => {
+      if (!resultsData) return;
+
+      const dataStr = JSON.stringify(resultsData, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `osint-results-${Date.now()}.json`;
+      a.click();
+    });
+
+    // Экспорт в CSV
+    document.getElementById('exportCsv').addEventListener('click', () => {
+      if (!resultsData) return;
+
+      let csv = 'Type,Value\n';
+      
+      if (resultsData.emails) {
+        resultsData.emails.forEach(email => csv += `Email,"${email}"\n`);
+      }
+      
+      if (resultsData.phones) {
+        resultsData.phones.forEach(phone => csv += `Phone,"${phone}"\n`);
+      }
+
+      if (resultsData.socials) {
+        for (const [platform, accounts] of Object.entries(resultsData.socials)) {
+          accounts.forEach(acc => csv += `Social-${platform},"${acc}"\n`);
+        }
+      }
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `osint-results-${Date.now()}.csv`;
+      a.click();
+    });
+  </script>
+</body>
+</html>
