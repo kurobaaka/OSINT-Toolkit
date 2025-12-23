@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSINT Toolkit</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .header {
+      padding: 20px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .search-section {
+      margin-bottom: 20px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 8px;
+      border-radius: 10px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.3s;
+      background: transparent;
+    }
+
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .tab.active {
+      background: rgba(255, 255, 255, 0.25);
+      font-weight: 600;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .tool-btn {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+      font-weight: 500;
+    }
+
+    .tool-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .tool-btn:active {
+      transform: translateY(0);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .quick-links {
+      margin-top: 15px;
+    }
+
+    .quick-link {
+      display: block;
+      padding: 10px 15px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+
+    .quick-link:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateX(5px);
+    }
+
+    .footer {
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 11px;
+      opacity: 0.7;
+      background: rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔍 OSINT Toolkit</h1>
+    <p class="subtitle">Open Source Intelligence Tools</p>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" data-tab="search">Поиск</div>
+      <div class="tab" data-tab="analyze">Анализ</div>
+      <div class="tab" data-tab="tools">Инструменты</div>
+    </div>
+
+    <!-- Вкладка поиска -->
+    <div id="search" class="tab-content active">
+      <div class="search-section">
+        <div class="input-group">
+          <input type="text" id="usernameInput" placeholder="Введите username или email">
+        </div>
+        <div class="tools-grid">
+          <button class="tool-btn" data-search="google">Google</button>
+          <button class="tool-btn" data-search="github">GitHub</button>
+          <button class="tool-btn" data-search="twitter">Twitter/X</button>
+          <button class="tool-btn" data-search="linkedin">LinkedIn</button>
+          <button class="tool-btn" data-search="instagram">Instagram</button>
+          <button class="tool-btn" data-search="reddit">Reddit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Вкладка анализа -->
+    <div id="analyze" class="tab-content">
+      <div class="input-group">
+        <input type="text" id="domainInput" placeholder="Введите домен или IP">
+      </div>
+      <div class="tools-grid">
+        <button class="tool-btn" data-analyze="whois">WHOIS</button>
+        <button class="tool-btn" data-analyze="dns">DNS Lookup</button>
+        <button class="tool-btn" data-analyze="shodan">Shodan</button>
+        <button class="tool-btn" data-analyze="virustotal">VirusTotal</button>
+        <button class="tool-btn" data-analyze="wayback">Wayback</button>
+        <button class="tool-btn" data-analyze="crt">SSL Certs</button>
+      </div>
+    </div>
+
+    <!-- Вкладка инструментов -->
+    <div id="tools" class="tab-content">
+      <div class="quick-links">
+        <a href="https://osintframework.com/" target="_blank" class="quick-link">📚 OSINT Framework</a>
+        <a href="https://haveibeenpwned.com/" target="_blank" class="quick-link">🔐 Have I Been Pwned</a>
+        <a href="https://tineye.com/" target="_blank" class="quick-link">🖼️ TinEye Reverse Image</a>
+        <a href="https://emailrep.io/" target="_blank" class="quick-link">📧 EmailRep</a>
+        <a href="https://www.shodan.io/" target="_blank" class="quick-link">🌐 Shodan</a>
+        <a href="https://hunter.io/" target="_blank" class="quick-link">🎯 Hunter.io</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Chrome Extension для OSINT исследований
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
